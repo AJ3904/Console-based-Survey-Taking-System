@@ -21,4 +21,8 @@ public abstract class Question implements Serializable {
 	public void setResponse(Response response) {
 		this.response = response;
 	}
+
+	public void setNoOfAnswersAllowed(int noOfAnswersAllowed) {
+		this.noOfAnswersAllowed = noOfAnswersAllowed;
+	}
 }
