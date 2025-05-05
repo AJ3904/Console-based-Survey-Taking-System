@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class TrueOrFalse extends MultipleChoice implements Serializable {
-	private long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	TrueOrFalse(String prompt) {
 		super(prompt);

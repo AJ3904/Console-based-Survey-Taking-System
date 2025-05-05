@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Response {
+	private static final long serialVersionUID = 1L;
 	private List<String> response = new ArrayList<String>();
-	private long serialVersionUID = 1L;
 
 	public List<String> getResponse() {
 		return response;

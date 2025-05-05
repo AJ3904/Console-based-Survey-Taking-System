@@ -1,8 +1,8 @@
 import java.io.Serializable;
 
 public class ShortAnswer extends Essay implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int maxCharacters;
-	private long serialVersionUID = 1L;
 
 	ShortAnswer(String prompt, int maxCharacters) {
 		super(prompt);

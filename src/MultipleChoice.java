@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleChoice extends Question implements Serializable {
+	private static final long serialVersionUID = 1L;
 	protected List<String> options = new ArrayList<String>();
 	protected int noOfOptions = 0;
-	private long serialVersionUID = 1L;
 
 	MultipleChoice(String prompt) {
 		this.prompt = prompt;
