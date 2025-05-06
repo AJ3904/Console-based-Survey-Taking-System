@@ -1,4 +1,8 @@
+import java.io.File;
+import java.util.Objects;
 import java.util.Scanner;
+
+import utils.SerializationHelper;
 
 public class SurveyHandler {
 
@@ -25,6 +29,11 @@ public class SurveyHandler {
 				System.out.println();
 				displaySurvey();
 				break;
+			case 3:
+				System.out.println();
+				loadSurvey();
+				System.out.println();
+				break;
 			case 4:
 				System.out.println();
 				saveSurvey();
@@ -40,6 +49,40 @@ public class SurveyHandler {
 				break;
 			}
 		}
+	}
+
+	private void loadSurvey() {
+		File dir = new File("Survey");
+		if (!dir.exists() || !dir.isDirectory()) {
+			System.out.println("You don't have any surveys saved");
+			return;
+		}
+
+		File[] files = dir.listFiles(File::isFile);
+		System.out.println("Available surveys:");
+		for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
+			System.out.printf("%d) %s%n", i + 1, files[i].getName());
+		}
+
+		Scanner scanner = new Scanner(System.in);
+		int choice = -1;
+
+		while (choice < 1 || choice > files.length) {
+			System.out.print("Select a survey to load: ");
+			String line = scanner.nextLine();
+			try {
+				choice = Integer.parseInt(line);
+				if (choice < 1 || choice > files.length) {
+					System.out.println("Please enter a valid choice.");
+				}
+			} catch (NumberFormatException ex) {
+				System.out.println("Enter a valid number.");
+			}
+		}
+
+		File selected = files[choice - 1];
+		currentSurvey = SerializationHelper.deserialize(Survey.class, selected.getAbsolutePath());
+		System.out.println("Loaded survey: " + selected.getName());
 	}
 
 	private void saveSurvey() {
@@ -63,7 +106,7 @@ public class SurveyHandler {
 
 	private void displaySurvey() {
 		if (currentSurvey == null) {
-			System.out.println("You must have a survey loaded in order to display it.");
+			System.out.println("You must have a survey loaded in order to display it.\n");
 		} else {
 			currentSurvey.displaySurvey();
 		}
