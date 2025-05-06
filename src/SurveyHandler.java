@@ -91,7 +91,7 @@ public class SurveyHandler {
 		} else {
 			String name;
 			while (true) {
-				System.out.println("Enter a name for your survey:");
+				System.out.println("Enter a name for your survey (use the same name to overwrite an existing survey):");
 				scanner.nextLine();
 				name = scanner.nextLine().trim();
 				if (name.isEmpty()) {
