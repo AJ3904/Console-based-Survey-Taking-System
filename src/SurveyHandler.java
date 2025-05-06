@@ -24,6 +24,10 @@ public class SurveyHandler {
 			case 2:
 				System.out.println();
 				displaySurvey();
+				break;
+			case 4:
+				System.out.println();
+				saveSurvey();
 				System.out.println();
 				break;
 			case 7:
@@ -35,6 +39,25 @@ public class SurveyHandler {
 				System.out.println();
 				break;
 			}
+		}
+	}
+
+	private void saveSurvey() {
+		if (currentSurvey == null) {
+			System.out.println("You must have a survey loaded in order to save it.");
+		} else {
+			String name;
+			while (true) {
+				System.out.println("Enter a name for your survey:");
+				scanner.nextLine();
+				name = scanner.nextLine().trim();
+				if (name.isEmpty()) {
+					System.out.println("Name cannot be blank.");
+				} else {
+					break;
+				}
+			}
+			currentSurvey.saveSurvey(name);
 		}
 	}
 
@@ -117,21 +140,21 @@ public class SurveyHandler {
 		}
 
 		currentSurvey.addQuestion(question);
-		System.out.println("Your matching question has been added.");
+		System.out.println("Your matching question has been added.\n");
 	}
 
 	private void addDateQuestion() {
 		String prompt = getPrompt("Enter the prompt for your date question:");
 		ValidDate question = new ValidDate(prompt);
 		currentSurvey.addQuestion(question);
-		System.out.println("Your date question has been added.");
+		System.out.println("Your date question has been added.\n");
 	}
 
 	private void addEssayQuestion() {
 		String prompt = getPrompt("Enter the prompt for your essay question:");
 		Essay question = new Essay(prompt);
 		currentSurvey.addQuestion(question);
-		System.out.println("Your essay question has been added.");
+		System.out.println("Your essay question has been added.\n");
 	}
 
 	private void addShortAnswerQuestion() {
@@ -147,7 +170,7 @@ public class SurveyHandler {
 
 		ShortAnswer question = new ShortAnswer(prompt, maxChars);
 		currentSurvey.addQuestion(question);
-		System.out.println("Your short-answer question has been added.");
+		System.out.println("Your short-answer question has been added.\n");
 	}
 
 	private void addMultipleChoiceQuestion() {
@@ -184,14 +207,14 @@ public class SurveyHandler {
 		}
 
 		currentSurvey.addQuestion(question);
-		System.out.println("Your multiple-choice question has been added.");
+		System.out.println("Your multiple-choice question has been added.\n");
 	}
 
 	private void addTrueFalseQuestion() {
 		String prompt = getPrompt("Enter the prompt for your True/False question:");
 		TrueOrFalse question = new TrueOrFalse(prompt);
 		currentSurvey.addQuestion(question);
-		System.out.println("Your True/False question has been added.");
+		System.out.println("Your True/False question has been added.\n");
 	}
 
 	private void showMenu1() {

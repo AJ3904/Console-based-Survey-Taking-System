@@ -1,8 +1,13 @@
+import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Survey {
+import utils.SerializationHelper;
+
+public class Survey implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final String basePath = "Survey" + File.separator;
 	private List<Question> questions = new ArrayList<>();
 	private List<Response> responses = new ArrayList<>();
 
@@ -22,5 +27,10 @@ public class Survey {
 				index++;
 			}
 		}
+	}
+
+	public void saveSurvey(String name) {
+		System.out.println("Survey has been saved.");
+		SerializationHelper.serialize(Survey.class, this, basePath, name);
 	}
 }

@@ -7,6 +7,12 @@ public class ValidDate extends Question implements Serializable {
 		this.prompt = prompt;
 	}
 
+	@Override
+	public void displayQuestion() {
+		System.out.println(prompt);
+		System.out.println("Date should be entered in the following format: YYYY-MM-DD");
+	}
+
 	boolean isValidDate(String date) {
 		String regex = "^\\d{4}-\\d{2}-\\d{2}$";
 		if (!date.matches(regex)) {
@@ -53,10 +59,8 @@ public class ValidDate extends Question implements Serializable {
 			return false;
 		} else if (year % 100 != 0) {
 			return true;
-		} else if (year % 400 != 0) {
-			return false;
 		} else {
-			return true;
+			return year % 400 == 0;
 		}
 	}
 }
