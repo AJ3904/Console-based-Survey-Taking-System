@@ -11,6 +11,11 @@ public class TrueOrFalse extends MultipleChoice implements Serializable {
 	}
 
 	@Override
+	public void setPrompt(String prompt) {
+		this.prompt = prompt;
+	}
+
+	@Override
 	public void displayQuestion() {
 		System.out.println(prompt);
 		System.out.println("T/F");

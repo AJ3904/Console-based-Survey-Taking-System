@@ -16,4 +16,8 @@ public class ShortAnswer extends Essay implements Serializable {
 	private boolean isUnderCharLimit(int index) {
 		return response.getResponseSize(index) <= maxCharacters;
 	}
+
+	public int getCharacterLimit() {
+		return maxCharacters;
+	}
 }
