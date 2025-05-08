@@ -7,6 +7,7 @@ import utils.SerializationHelper;
 public class SurveyHandler {
 
 	private Survey currentSurvey;
+	private String currentSurveyName;
 	private Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
@@ -39,6 +40,11 @@ public class SurveyHandler {
 				saveSurvey();
 				System.out.println();
 				break;
+			case 6:
+				System.out.println();
+				modifySurvey();
+				System.out.println();
+				break;
 			case 7:
 				running = false;
 				System.out.println("Goodbye!");
@@ -47,6 +53,137 @@ public class SurveyHandler {
 				System.out.println("Invalid choice. Please try again.");
 				System.out.println();
 				break;
+			}
+		}
+	}
+
+	private void modifySurvey() {
+		if (currentSurvey == null) {
+			System.out.println("You must have a survey loaded in order to modify it");
+		} else {
+			displaySurvey();
+			int choice = getIntInput("Enter the number of the question you want to modify: ");
+			while (choice <= 0 || choice > currentSurvey.getQuestions().size()) {
+				choice = getIntInput("Enter a valid question number");
+			}
+			Question question = currentSurvey.getQuestions().get(choice - 1);
+			while (true) {
+				System.out.println("Do you wish to modify the prompt? [Y/N]");
+				String choice2 = scanner.nextLine().trim();
+
+				if (choice2.equalsIgnoreCase("Y")) {
+					String newPrompt = getPrompt("Enter new prompt:");
+					question.setPrompt(newPrompt);
+					break;
+				}
+				if (choice2.equalsIgnoreCase("N")) {
+					break;
+				}
+				System.out.println("Enter a valid response (Y or N).");
+			}
+
+			if (question instanceof MultipleChoice && !(question instanceof TrueOrFalse)) {
+				modifyMultipleChoice((MultipleChoice) question);
+			} else if (question instanceof ShortAnswer) {
+				modifyShortAnswer((ShortAnswer) question);
+			} else if (question instanceof Matching) {
+				modifyMatching((Matching) question);
+			}
+			System.out.println("Your survey has been modified.");
+		}
+	}
+
+	private void modifyMatching(Matching question) {
+		while (true) {
+			System.out.println("Do you wish to modify the matching pairs? [Y/N]");
+			String choice = scanner.nextLine().trim();
+
+			if (choice.equalsIgnoreCase("Y")) {
+				String leftItem;
+				question.displayLeftItems();
+				int lindex = getIntInput("Enter left-item you wish to modify: ");
+				while (lindex <= 0 || lindex > question.getMatchCount()) {
+					lindex = getIntInput("Please enter a valid number: ");
+				}
+				while (true) {
+					System.out.print("Enter new choice: ");
+					String newChoice = scanner.nextLine().trim();
+					if (newChoice.isEmpty()) {
+						System.out.println("Choice cannot be empty.");
+					} else {
+						leftItem = newChoice;
+						break;
+					}
+				}
+
+				String rightItem;
+				question.displayRightItems();
+				int rindex = getIntInput("Enter right-item you wish to modify: ");
+				while (rindex <= 0 || rindex > question.getMatchCount()) {
+					rindex = getIntInput("Please enter a valid number: ");
+				}
+				while (true) {
+					System.out.print("Enter new choice: ");
+					String newChoice = scanner.nextLine().trim();
+					if (newChoice.isEmpty()) {
+						System.out.println("Choice cannot be empty.");
+					} else {
+						rightItem = newChoice;
+						break;
+					}
+				}
+				question.modifyMatch(lindex, leftItem, rindex, rightItem);
+			} else if (choice.equalsIgnoreCase("N")) {
+				break;
+			} else {
+				System.out.println("Invalid choice. Please try again.");
+			}
+		}
+	}
+
+	private void modifyShortAnswer(ShortAnswer question) {
+		while (true) {
+			System.out.println("Do you wish to modify the character limit for responses? [Y/N]");
+			String choice = scanner.nextLine().trim();
+
+			if (choice.equalsIgnoreCase("Y")) {
+				int limit = getIntInput("Enter new character limit for responses: ");
+				question.setMaxCharacters(limit);
+				question.setPrompt(question.getPrompt() + " (In under " + limit + " characters)");
+				break;
+			} else if (choice.equalsIgnoreCase("N")) {
+				break;
+			} else {
+				System.out.println("Invalid choice. Please try again.");
+			}
+		}
+	}
+
+	private void modifyMultipleChoice(MultipleChoice question) {
+		while (true) {
+			System.out.println("Do you wish to modify choices? [Y/N]");
+			String choice = scanner.nextLine().trim();
+
+			if (choice.equalsIgnoreCase("Y")) {
+				question.displayOptions(true);
+				int index = getIntInput("Enter choice you wish to modify: ");
+				while (index <= 0 || index > question.getOptions().size()) {
+					index = getIntInput("Please enter a valid number: ");
+				}
+				while (true) {
+					System.out.print("Enter new choice: ");
+					String newChoice = scanner.nextLine().trim();
+					if (newChoice.isEmpty()) {
+						System.out.println("Choice cannot be empty.");
+					} else {
+						question.modifyOption(index - 1, newChoice);
+						break;
+					}
+				}
+			} else if (choice.equalsIgnoreCase("N")) {
+				break;
+			} else {
+				System.out.println("Invalid choice. Please try again.");
 			}
 		}
 	}
@@ -82,6 +219,7 @@ public class SurveyHandler {
 
 		File selected = files[choice - 1];
 		currentSurvey = SerializationHelper.deserialize(Survey.class, selected.getAbsolutePath());
+		currentSurveyName = selected.getName();
 		System.out.println("Loaded survey: " + selected.getName());
 	}
 
@@ -92,7 +230,6 @@ public class SurveyHandler {
 			String name;
 			while (true) {
 				System.out.println("Enter a name for your survey (use the same name to overwrite an existing survey):");
-				scanner.nextLine();
 				name = scanner.nextLine().trim();
 				if (name.isEmpty()) {
 					System.out.println("Name cannot be blank.");
@@ -100,6 +237,7 @@ public class SurveyHandler {
 					break;
 				}
 			}
+			currentSurveyName = name;
 			currentSurvey.saveSurvey(name);
 		}
 	}
@@ -195,6 +333,12 @@ public class SurveyHandler {
 
 	private void addEssayQuestion() {
 		String prompt = getPrompt("Enter the prompt for your essay question:");
+		int maxOptions = getIntInput("Enter the number of responses: ");
+		while (maxOptions < 1) {
+			System.out.println("You must allow at least 1 response. Please try again.");
+			maxOptions = getIntInput("Enter the number of responses: ");
+		}
+		prompt = prompt + " (Give atleast " + maxOptions + " points)";
 		Essay question = new Essay(prompt);
 		currentSurvey.addQuestion(question);
 		System.out.println("Your essay question has been added.\n");
@@ -210,6 +354,7 @@ public class SurveyHandler {
 				break;
 			}
 		}
+		prompt = prompt + " (In under " + maxChars + " characters)";
 
 		ShortAnswer question = new ShortAnswer(prompt, maxChars);
 		currentSurvey.addQuestion(question);
@@ -224,7 +369,6 @@ public class SurveyHandler {
 			System.out.println("You must allow at least 1 option. Please try again.");
 			maxOptions = getIntInput("Enter the number of selectable options: ");
 		}
-		prompt = prompt + " (Select up to " + maxOptions + " option" + (maxOptions > 1 ? "s" : "") + ")";
 		MultipleChoice question = new MultipleChoice(prompt);
 
 		int noOfOptions = getIntInput("Enter the number options: ");
@@ -286,15 +430,16 @@ public class SurveyHandler {
 			System.out.print("Please enter a valid number: ");
 			scanner.next();
 		}
-		return scanner.nextInt();
+		int value = scanner.nextInt();
+		scanner.nextLine();
+		return value;
 	}
 
 	private String getPrompt(String question) {
-		Scanner scanner = new Scanner(System.in);
 		String prompt;
 		while (true) {
 			System.out.println(question);
-			prompt = scanner.nextLine();
+			prompt = scanner.nextLine().trim();
 			if (prompt.isEmpty()) {
 				System.out.println("Question cannot be empty.");
 			} else if (prompt.matches("[0-9]+")) {
@@ -302,9 +447,8 @@ public class SurveyHandler {
 			} else if (prompt.matches("[-+*/%=]")) {
 				System.out.println("Question cannot contain '-', '+', '*', '/', '%', or '=' characters.");
 			} else {
-				break;
+				return prompt;
 			}
 		}
-		return prompt;
 	}
 }

@@ -33,4 +33,8 @@ public class Survey implements Serializable {
 		System.out.println("Survey has been saved.");
 		SerializationHelper.serialize(Survey.class, this, basePath, name);
 	}
+
+	public List<Question> getQuestions() {
+		return questions;
+	}
 }

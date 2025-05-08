@@ -10,6 +10,14 @@ public abstract class Question implements Serializable {
 		System.out.println(prompt);
 	}
 
+	public void setNoOfAnswersAllowed(int noOfAnswersAllowed) {
+		this.noOfAnswersAllowed = noOfAnswersAllowed;
+	}
+
+	public String getPrompt() {
+		return prompt;
+	}
+
 	public void setPrompt(String prompt) {
 		this.prompt = prompt;
 	}
@@ -20,9 +28,5 @@ public abstract class Question implements Serializable {
 
 	public void setResponse(Response response) {
 		this.response = response;
-	}
-
-	public void setNoOfAnswersAllowed(int noOfAnswersAllowed) {
-		this.noOfAnswersAllowed = noOfAnswersAllowed;
 	}
 }

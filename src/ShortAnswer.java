@@ -9,6 +9,10 @@ public class ShortAnswer extends Essay implements Serializable {
 		this.maxCharacters = maxCharacters;
 	}
 
+	public void setMaxCharacters(int maxCharacters) {
+		this.maxCharacters = maxCharacters;
+	}
+
 	private boolean isUnderCharLimit(int index) {
 		return response.getResponseSize(index) <= maxCharacters;
 	}
