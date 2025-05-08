@@ -85,6 +85,8 @@ public class SurveyHandler {
 			if (question instanceof MultipleChoice && !(question instanceof TrueOrFalse)) {
 				modifyMultipleChoice((MultipleChoice) question);
 			} else if (question instanceof ShortAnswer) {
+				question.setPrompt(question.getPrompt() + " (In under " + ((ShortAnswer) question).getCharacterLimit()
+						+ " characters)");
 				modifyShortAnswer((ShortAnswer) question);
 			} else if (question instanceof Matching) {
 				modifyMatching((Matching) question);
@@ -132,7 +134,7 @@ public class SurveyHandler {
 						break;
 					}
 				}
-				question.modifyMatch(lindex, leftItem, rindex, rightItem);
+				question.modifyMatch(lindex - 1, leftItem, rindex - 1, rightItem);
 			} else if (choice.equalsIgnoreCase("N")) {
 				break;
 			} else {
@@ -148,11 +150,18 @@ public class SurveyHandler {
 
 			if (choice.equalsIgnoreCase("Y")) {
 				int limit = getIntInput("Enter new character limit for responses: ");
+				String prompt = question.getPrompt();
+
+				prompt = prompt.replaceAll("\\s*\\(In under \\d+ characters\\)", "");
+
+				prompt = prompt + " (In under " + limit + " characters)";
+				question.setPrompt(prompt);
 				question.setMaxCharacters(limit);
-				question.setPrompt(question.getPrompt() + " (In under " + limit + " characters)");
 				break;
+
 			} else if (choice.equalsIgnoreCase("N")) {
 				break;
+
 			} else {
 				System.out.println("Invalid choice. Please try again.");
 			}
@@ -371,7 +380,7 @@ public class SurveyHandler {
 		}
 		MultipleChoice question = new MultipleChoice(prompt);
 
-		int noOfOptions = getIntInput("Enter the number options: ");
+		int noOfOptions = getIntInput("Enter the number of options: ");
 		while (noOfOptions < maxOptions) {
 			System.out.println(
 					"Number of options must at least equal the maximum number of selectable options. Please try again.");
