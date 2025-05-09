@@ -40,6 +40,10 @@ public class SurveyHandler {
 				saveSurvey();
 				System.out.println();
 				break;
+			case 5:
+				System.out.println();
+				takeSurvey();
+				System.out.println();
 			case 6:
 				System.out.println();
 				modifySurvey();
@@ -54,6 +58,12 @@ public class SurveyHandler {
 				System.out.println();
 				break;
 			}
+		}
+	}
+
+	private void takeSurvey() {
+		if (currentSurvey == null) {
+			System.out.println("You must have a survey loaded in order to take it");
 		}
 	}
 
