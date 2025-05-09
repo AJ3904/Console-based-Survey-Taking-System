@@ -143,17 +143,22 @@ public class SurveyHandler {
 	}
 
 	private void modifyMultipleChoice(MultipleChoice question) {
-		String choice = input.getYesOrNo("Do you wish to modify choices? [Y/N]");
+		while (true) {
+			String choice = input.getYesOrNo("Do you wish to modify choices? [Y/N]");
 
-		if (choice.equalsIgnoreCase("Y")) {
-			question.displayOptions(true);
-			int index = input.getIntInput("Enter choice you wish to modify: ");
-			while (index <= 0 || index > question.getOptions().size()) {
-				index = input.getIntInput("Please enter a valid number: ");
+			if (choice.equalsIgnoreCase("Y")) {
+				question.displayOptions(true);
+				int index = input.getIntInput("Enter choice you wish to modify: ");
+				while (index <= 0 || index > question.getOptions().size()) {
+					index = input.getIntInput("Please enter a valid number: ");
+				}
+				String newChoice = input.getNonEmptyResponse("Enter new choice: ", "Choice");
+				question.modifyOption(index - 1, newChoice);
+			} else {
+				break;
 			}
-			String newChoice = input.getNonEmptyResponse("Enter new choice: ", "Choice");
-			question.modifyOption(index - 1, newChoice);
 		}
+
 	}
 
 	private void loadSurvey() {
