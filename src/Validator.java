@@ -11,7 +11,11 @@ public class Validator {
 	}
 
 	public boolean isValidShortAnswer(String response, int characterLimit) {
-		return !response.isEmpty() && response.length() <= characterLimit;
+		if (response.isEmpty() || response.length() > characterLimit) {
+			return false;
+		}
+
+		return !response.matches("[^A-Za-z0-9]+") && !response.matches("[0-9]+");
 	}
 
 	public boolean isValidDate(String date) {

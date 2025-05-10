@@ -54,6 +54,11 @@ public class SurveyHandler {
 				System.out.println();
 				break;
 			case 7:
+				System.out.println();
+				displayResponse();
+				System.out.println();
+				break;
+			case 8:
 				running = false;
 				System.out.println("Goodbye!");
 				break;
@@ -62,6 +67,44 @@ public class SurveyHandler {
 				System.out.println();
 				break;
 			}
+		}
+	}
+
+	private void displayResponse() {
+		if (currentSurvey == null) {
+			System.out.println("You must have a survey loaded to view its responses.");
+		} else {
+			File dir = new File(currentSurvey.getName() + " Responses");
+			if (!dir.exists() || !dir.isDirectory()) {
+				System.out.println("This survey doesn't have any responses");
+				return;
+			}
+
+			File[] files = dir.listFiles(File::isFile);
+			System.out.println("Available responses:");
+			for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
+				System.out.printf("%d) %s%n", i + 1, files[i].getName());
+			}
+
+			Scanner scanner = new Scanner(System.in);
+			int choice = -1;
+
+			while (choice < 1 || choice > files.length) {
+				System.out.print("Select a response to view: ");
+				String line = scanner.nextLine();
+				try {
+					choice = Integer.parseInt(line);
+					if (choice < 1 || choice > files.length) {
+						System.out.println("Please enter a valid choice.");
+					}
+				} catch (NumberFormatException ex) {
+					System.out.println("Enter a valid number.");
+				}
+			}
+
+			File selected = files[choice - 1];
+			Response response = SerializationHelper.deserialize(Response.class, selected.getAbsolutePath());
+			response.displayResponse();
 		}
 	}
 
@@ -80,7 +123,7 @@ public class SurveyHandler {
 			displaySurvey();
 			int choice = input.getIntInput("Enter the number of the question you want to modify: ");
 			while (choice <= 0 || choice > currentSurvey.getQuestions().size()) {
-				choice = input.getIntInput("Enter a valid question number");
+				choice = input.getIntInput("Enter a valid question number: ");
 			}
 			currentSurvey.modifyQuestion(choice - 1, input);
 			System.out.println("Your survey has been modified.");
@@ -168,7 +211,7 @@ public class SurveyHandler {
 				returnToMain = true;
 				break;
 			default:
-				System.out.println("Invalid choice. Try again.");
+				System.out.println("Invalid choice. Try again.\n");
 			}
 		}
 	}
@@ -250,7 +293,7 @@ public class SurveyHandler {
 		question.setNoOfAnswersAllowed(maxOptions);
 
 		for (int i = 0; i < noOfOptions; i++) {
-			String option = input.getNonEmptyResponse("Enter choice #" + (i + 1) + ":", "Choice");
+			String option = input.getNonEmptyResponse("Enter choice #" + (i + 1) + ": ", "Choice");
 			question.setOption(option);
 		}
 
@@ -272,7 +315,8 @@ public class SurveyHandler {
 		System.out.println("4) Save the current Survey");
 		System.out.println("5) Take the current Survey");
 		System.out.println("6) Modify the current Survey");
-		System.out.println("7) Quit");
+		System.out.println("7) View current survey responses");
+		System.out.println("8) Quit");
 	}
 
 	private void showMenu2() {

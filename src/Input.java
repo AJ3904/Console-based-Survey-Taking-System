@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,6 +34,8 @@ public class Input {
 				System.out.println("Question cannot contain only numbers.");
 			} else if (prompt.matches("[-+*/%=]")) {
 				System.out.println("Question cannot contain '-', '+', '*', '/', '%', or '=' characters.");
+			} else if (prompt.matches("[^A-Za-z0-9]+")) {
+				System.out.println("Question cannot contain only special characters.");
 			} else {
 				return prompt;
 			}
@@ -70,7 +73,7 @@ public class Input {
 		for (int i = 0; i < noOfAnswersAllowed; i++) {
 			String response = scanner.nextLine().trim();
 			if (validator.isValidMultipleChoiceOption(response, noOfChoices)) {
-				responses.add(response);
+				responses.add(response.toUpperCase());
 			} else {
 				i--;
 				System.out.println(response + " is not a valid choice.");
@@ -95,8 +98,8 @@ public class Input {
 		List<String> responses = new ArrayList<>();
 		for (int i = 0; i < noOfAnswersAllowed; i++) {
 			String response = scanner.nextLine().trim();
-			if (response.isEmpty()) {
-				System.out.println("Your response cannot be empty.");
+			if (!validator.isValidShortAnswer(response, Integer.MAX_VALUE)) {
+				System.out.println("Your response is invalid. Try again.");
 				i--;
 			} else {
 				responses.add(response);
@@ -115,15 +118,31 @@ public class Input {
 	}
 
 	public List<String> getMatchingResponse(int matchCount) {
+		HashSet<String> usedLeft = new HashSet<>();
+		HashSet<Integer> usedRight = new HashSet<>();
 		List<String> responses = new ArrayList<>();
+
 		System.out.println("Enter left option with the matching right option separated by a space");
 		for (int i = 0; i < matchCount; i++) {
 			String response = scanner.nextLine().trim();
-			if (validator.isValidMatchingPair(response, matchCount)) {
-				responses.add(response);
-			} else {
+			if (!validator.isValidMatchingPair(response, matchCount)) {
 				i--;
 				System.out.println("Your response is invalid.");
+			}
+
+			String[] parts = response.split("\\s+");
+			String left = parts[0];
+			int right = Integer.parseInt(parts[1]);
+			if (usedLeft.contains(left.toLowerCase())) {
+				i--;
+				System.out.println("You already matched “" + left + "”.");
+			} else if (usedRight.contains(right)) {
+				i--;
+				System.out.println("You already used number " + right + ".");
+			} else {
+				usedLeft.add(left.toLowerCase());
+				usedRight.add(right);
+				responses.add(response);
 			}
 		}
 		return responses;

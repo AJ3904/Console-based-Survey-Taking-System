@@ -91,7 +91,7 @@ public class MultipleChoice extends Question implements Serializable {
 				displayOptions(true);
 				int index = input.getIntInput("Enter choice you wish to modify: ");
 				while (index <= 0 || index > getOptions().size()) {
-					index = input.getIntInput("Please enter a valid number: ");
+					index = input.getIntInput("Please enter a valid option: ");
 				}
 				String newChoice = input.getNonEmptyResponse("Enter new choice: ", "Choice");
 				modifyOption(index - 1, newChoice);
