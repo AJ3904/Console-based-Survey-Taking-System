@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,14 +9,15 @@ import utils.SerializationHelper;
 public class Response implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
+	private static final String basePath = " Responses" + File.separator;
 	private List<List<String>> response = new ArrayList<>();
 
 	public void addResponse(List<String> response) {
 		this.response.add(response);
 	}
 
-	public void saveResponse(String name, int size) {
+	public void saveResponse(String name, int index) {
 		System.out.println("Survey has been saved.");
-		SerializationHelper.serialize(Response.class, this, name + " Responses", Integer.toString(size));
+		SerializationHelper.serialize(Response.class, this, name + basePath, Integer.toString(index));
 	}
 }
