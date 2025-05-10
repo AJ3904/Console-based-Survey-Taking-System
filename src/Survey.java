@@ -54,7 +54,7 @@ public class Survey implements Serializable {
 			response.addResponse(answers);
 		}
 		addResponse(response);
-		response.saveResponse(name, responses.size());
+		response.saveResponse(name, TimeHelper.getUniqueTimeStamp());
 	}
 
 	public List<Question> getQuestions() {

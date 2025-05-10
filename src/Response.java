@@ -16,8 +16,8 @@ public class Response implements Serializable {
 		this.response.add(response);
 	}
 
-	public void saveResponse(String name, int index) {
-		System.out.println("Survey has been saved.");
-		SerializationHelper.serialize(Response.class, this, name + basePath, Integer.toString(index));
+	public void saveResponse(String name, String fileName) {
+		System.out.println("Response has been saved.");
+		SerializationHelper.serialize(Response.class, this, name + basePath, fileName);
 	}
 }
