@@ -24,5 +24,13 @@ public abstract class Question implements Serializable {
 		this.prompt = prompt;
 	}
 
+	public void modifyQuestion(Input input) {
+		String choice2 = input.getChoice("Do you wish to modify the prompt? [Y/N]", "Y", "N");
+		if (choice2.equalsIgnoreCase("Y")) {
+			String newPrompt = input.getPrompt("Enter new prompt:");
+			setPrompt(newPrompt);
+		}
+	}
+
 	public abstract List<String> getResponse(Input input);
 }

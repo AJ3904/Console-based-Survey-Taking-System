@@ -82,86 +82,9 @@ public class SurveyHandler {
 			while (choice <= 0 || choice > currentSurvey.getQuestions().size()) {
 				choice = input.getIntInput("Enter a valid question number");
 			}
-			Question question = currentSurvey.getQuestions().get(choice - 1);
-
-			String choice2 = input.getChoice("Do you wish to modify the prompt? [Y/N]", "Y", "N");
-			if (choice2.equalsIgnoreCase("Y")) {
-				String newPrompt = input.getPrompt("Enter new prompt:");
-				question.setPrompt(newPrompt);
-			}
-
-			if (question instanceof MultipleChoice && !(question instanceof TrueOrFalse)) {
-				modifyMultipleChoice((MultipleChoice) question);
-			} else if (question instanceof ShortAnswer) {
-				question.setPrompt(question.getPrompt() + " (In under " + ((ShortAnswer) question).getCharacterLimit()
-						+ " characters)");
-				modifyShortAnswer((ShortAnswer) question);
-			} else if (question instanceof Matching) {
-				modifyMatching((Matching) question);
-			}
+			currentSurvey.modifyQuestion(choice - 1, input);
 			System.out.println("Your survey has been modified.");
 		}
-	}
-
-	private void modifyMatching(Matching question) {
-		while (true) {
-			String choice = input.getChoice("Do you wish to modify the matching pairs? [Y/N]", "Y", "N");
-
-			if (choice.equalsIgnoreCase("Y")) {
-				String leftItem;
-				question.displayLeftItems();
-				int lindex = input.getIntInput("Enter left-item you wish to modify: ");
-				while (lindex <= 0 || lindex > question.getMatchCount()) {
-					lindex = input.getIntInput("Please enter a valid number: ");
-				}
-				leftItem = input.getNonEmptyResponse("Enter new choice: ", "Choice");
-
-				String rightItem;
-				question.displayRightItems();
-				int rindex = input.getIntInput("Enter right-item you wish to modify: ");
-				while (rindex <= 0 || rindex > question.getMatchCount()) {
-					rindex = input.getIntInput("Please enter a valid number: ");
-				}
-				rightItem = input.getNonEmptyResponse("Enter new choice: ", "Choice");
-				question.modifyMatch(lindex - 1, leftItem, rindex - 1, rightItem);
-			} else {
-				break;
-			}
-		}
-	}
-
-	private void modifyShortAnswer(ShortAnswer question) {
-		String choice = input.getChoice("Do you wish to modify the character limit? [Y/N]", "Y", "N");
-
-		if (choice.equalsIgnoreCase("Y")) {
-			int limit = input.getIntInput("Enter new character limit for responses: ");
-			String prompt = question.getPrompt();
-
-			prompt = prompt.replaceAll("\\s*\\(In under \\d+ characters\\)", "");
-
-			prompt = prompt + " (In under " + limit + " characters)";
-			question.setPrompt(prompt);
-			question.setMaxCharacters(limit);
-		}
-	}
-
-	private void modifyMultipleChoice(MultipleChoice question) {
-		while (true) {
-			String choice = input.getChoice("Do you wish to modify choices? [Y/N]", "Y", "N");
-
-			if (choice.equalsIgnoreCase("Y")) {
-				question.displayOptions(true);
-				int index = input.getIntInput("Enter choice you wish to modify: ");
-				while (index <= 0 || index > question.getOptions().size()) {
-					index = input.getIntInput("Please enter a valid number: ");
-				}
-				String newChoice = input.getNonEmptyResponse("Enter new choice: ", "Choice");
-				question.modifyOption(index - 1, newChoice);
-			} else {
-				break;
-			}
-		}
-
 	}
 
 	private void loadSurvey() {

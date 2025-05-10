@@ -64,4 +64,8 @@ public class Survey implements Serializable {
 	public void addResponse(Response response) {
 		responses.add(response);
 	}
+
+	public void modifyQuestion(int index, Input input) {
+		questions.get(index).modifyQuestion(input);
+	}
 }

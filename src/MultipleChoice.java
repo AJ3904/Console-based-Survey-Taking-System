@@ -76,4 +76,28 @@ public class MultipleChoice extends Question implements Serializable {
 	public List<String> getResponse(Input input) {
 		return input.getMultipleChoiceResponse(noOfAnswersAllowed, noOfOptions);
 	}
+
+	protected void modifyQuestionSuper(Input input) {
+		super.modifyQuestion(input);
+	}
+
+	@Override
+	public void modifyQuestion(Input input) {
+		modifyQuestionSuper(input);
+		while (true) {
+			String choice = input.getChoice("Do you wish to modify choices? [Y/N]", "Y", "N");
+
+			if (choice.equalsIgnoreCase("Y")) {
+				displayOptions(true);
+				int index = input.getIntInput("Enter choice you wish to modify: ");
+				while (index <= 0 || index > getOptions().size()) {
+					index = input.getIntInput("Please enter a valid number: ");
+				}
+				String newChoice = input.getNonEmptyResponse("Enter new choice: ", "Choice");
+				modifyOption(index - 1, newChoice);
+			} else {
+				break;
+			}
+		}
+	}
 }
