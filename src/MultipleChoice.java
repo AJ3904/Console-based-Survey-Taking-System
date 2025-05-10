@@ -1,8 +1,10 @@
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleChoice extends Question implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	protected List<String> options = new ArrayList<>();
 	protected int noOfOptions = 0;

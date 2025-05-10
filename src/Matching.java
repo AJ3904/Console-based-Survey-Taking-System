@@ -1,8 +1,10 @@
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Matching extends Question implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private List<String> leftItems = new ArrayList<>();
 	private List<String> rightItems = new ArrayList<>();

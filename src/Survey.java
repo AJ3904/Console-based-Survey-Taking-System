@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import utils.SerializationHelper;
 import utils.TimeHelper;
 
 public class Survey implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String basePath = "Survey" + File.separator;
 	private List<Question> questions = new ArrayList<>();

@@ -1,8 +1,10 @@
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValidDate extends Question implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public ValidDate(String prompt) {
