@@ -30,4 +30,9 @@ public class TrueOrFalse extends MultipleChoice implements Serializable {
 		answers.add(answer);
 		return answers;
 	}
+
+	@Override
+	public void modifyQuestion(Input input) {
+		modifyQuestionSuper(input);
+	}
 }
