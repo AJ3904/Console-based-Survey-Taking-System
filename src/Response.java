@@ -1,23 +1,19 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Response {
+import utils.SerializationHelper;
+
+public class Response implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private List<String> response = new ArrayList<String>();
+	private List<List<String>> response = new ArrayList<>();
 
-	public List<String> getResponse() {
-		return response;
-	}
-
-	public void setResponse(List<String> response) {
-		this.response = response;
-	}
-
-	public void addResponse(String response) {
+	public void addResponse(List<String> response) {
 		this.response.add(response);
 	}
 
-	public int getResponseSize(int index) {
-		return response.get(index).length();
+	public void saveResponse(String name, int size) {
+		System.out.println("Survey has been saved.");
+		SerializationHelper.serialize(Response.class, this, name + " Responses", Integer.toString(size));
 	}
 }

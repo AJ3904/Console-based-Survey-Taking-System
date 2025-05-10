@@ -30,6 +30,11 @@ public class Matching extends Question implements Serializable {
 		}
 	}
 
+	@Override
+	public List<String> getResponse(Input input) {
+		return input.getMatchingResponse(getMatchCount());
+	}
+
 	public void displayLeftItems() {
 		for (int i = 0; i < leftItems.size(); i++) {
 			System.out.println((i + 1) + ") " + leftItems.get(i));

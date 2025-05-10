@@ -1,10 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Input {
 	private final Scanner scanner;
+	private final Validator validator;
 
 	public Input() {
 		scanner = new Scanner(System.in);
+		validator = new Validator();
 	}
 
 	public int getIntInput(String prompt) {
@@ -35,14 +39,16 @@ public class Input {
 		}
 	}
 
-	public String getYesOrNo(String prompt) {
+	public String getChoice(String prompt, String option1, String option2) {
 		while (true) {
-			System.out.println(prompt);
+			if (!prompt.isEmpty()) {
+				System.out.println(prompt);
+			}
 			String answer = scanner.nextLine().trim();
-			if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("N")) {
+			if (answer.equalsIgnoreCase(option1) || answer.equalsIgnoreCase(option2)) {
 				return answer;
 			} else {
-				System.out.println("Enter a valid response (Y or N).");
+				System.out.println("Enter a valid response (" + option1 + " or " + option2 + ").");
 			}
 		}
 	}
@@ -57,5 +63,69 @@ public class Input {
 				return response;
 			}
 		}
+	}
+
+	public List<String> getMultipleChoiceResponse(int noOfAnswersAllowed, int noOfChoices) {
+		List<String> responses = new ArrayList<>();
+		for (int i = 0; i < noOfAnswersAllowed; i++) {
+			String response = scanner.nextLine().trim();
+			if (validator.isValidMultipleChoiceOption(response, noOfChoices)) {
+				responses.add(response);
+			} else {
+				i--;
+				System.out.println(response + " is not a valid choice.");
+			}
+		}
+		return responses;
+	}
+
+	public String getShortAnswerResponse(int characterLimit) {
+		while (true) {
+			String response = scanner.nextLine().trim();
+			if (validator.isValidShortAnswer(response, characterLimit)) {
+				return response;
+			} else {
+				System.out.println("Your response is invalid.");
+				System.out.println("Current response length: " + response.length());
+			}
+		}
+	}
+
+	public List<String> getEssayResponse(int noOfAnswersAllowed) {
+		List<String> responses = new ArrayList<>();
+		for (int i = 0; i < noOfAnswersAllowed; i++) {
+			String response = scanner.nextLine().trim();
+			if (response.isEmpty()) {
+				System.out.println("Your response cannot be empty.");
+				i--;
+			} else {
+				responses.add(response);
+			}
+		}
+		return responses;
+	}
+
+	public String getDateResponse() {
+		while (true) {
+			String response = scanner.nextLine().trim();
+			if (validator.isValidDate(response)) {
+				return response;
+			}
+		}
+	}
+
+	public List<String> getMatchingResponse(int matchCount) {
+		List<String> responses = new ArrayList<>();
+		System.out.println("Enter left option with the matching right option separated by a space");
+		for (int i = 0; i < matchCount; i++) {
+			String response = scanner.nextLine().trim();
+			if (validator.isValidMatchingPair(response, matchCount)) {
+				responses.add(response);
+			} else {
+				i--;
+				System.out.println("Your response is invalid.");
+			}
+		}
+		return responses;
 	}
 }

@@ -6,8 +6,8 @@ import utils.SerializationHelper;
 
 public class SurveyHandler {
 
+	private final Input input;
 	private Survey currentSurvey;
-	private Input input;
 
 	SurveyHandler() {
 		this.input = new Input();
@@ -47,6 +47,7 @@ public class SurveyHandler {
 				System.out.println();
 				takeSurvey();
 				System.out.println();
+				break;
 			case 6:
 				System.out.println();
 				modifySurvey();
@@ -67,6 +68,8 @@ public class SurveyHandler {
 	private void takeSurvey() {
 		if (currentSurvey == null) {
 			System.out.println("You must have a survey loaded in order to take it");
+		} else {
+			currentSurvey.takeSurvey(input);
 		}
 	}
 
@@ -81,7 +84,7 @@ public class SurveyHandler {
 			}
 			Question question = currentSurvey.getQuestions().get(choice - 1);
 
-			String choice2 = input.getYesOrNo("Do you wish to modify the prompt? [Y/N]");
+			String choice2 = input.getChoice("Do you wish to modify the prompt? [Y/N]", "Y", "N");
 			if (choice2.equalsIgnoreCase("Y")) {
 				String newPrompt = input.getPrompt("Enter new prompt:");
 				question.setPrompt(newPrompt);
@@ -102,7 +105,7 @@ public class SurveyHandler {
 
 	private void modifyMatching(Matching question) {
 		while (true) {
-			String choice = input.getYesOrNo("Do you wish to modify the matching pairs? [Y/N]");
+			String choice = input.getChoice("Do you wish to modify the matching pairs? [Y/N]", "Y", "N");
 
 			if (choice.equalsIgnoreCase("Y")) {
 				String leftItem;
@@ -128,7 +131,7 @@ public class SurveyHandler {
 	}
 
 	private void modifyShortAnswer(ShortAnswer question) {
-		String choice = input.getYesOrNo("Do you wish to modify the character limit? [Y/N]");
+		String choice = input.getChoice("Do you wish to modify the character limit? [Y/N]", "Y", "N");
 
 		if (choice.equalsIgnoreCase("Y")) {
 			int limit = input.getIntInput("Enter new character limit for responses: ");
@@ -144,7 +147,7 @@ public class SurveyHandler {
 
 	private void modifyMultipleChoice(MultipleChoice question) {
 		while (true) {
-			String choice = input.getYesOrNo("Do you wish to modify choices? [Y/N]");
+			String choice = input.getChoice("Do you wish to modify choices? [Y/N]", "Y", "N");
 
 			if (choice.equalsIgnoreCase("Y")) {
 				question.displayOptions(true);
@@ -199,9 +202,7 @@ public class SurveyHandler {
 		if (currentSurvey == null) {
 			System.out.println("You must have a survey loaded in order to save it.");
 		} else {
-			String name = input.getNonEmptyResponse(
-					"Enter a name for your survey (use the same name to overwrite an existing survey): ", "Name");
-			currentSurvey.saveSurvey(name);
+			currentSurvey.saveSurvey();
 		}
 	}
 
@@ -216,6 +217,8 @@ public class SurveyHandler {
 	private void createSurvey() {
 		currentSurvey = new Survey();
 		boolean returnToMain = false;
+		currentSurvey.setName(input.getNonEmptyResponse("Enter a name for the survey: ", "Name"));
+
 		while (!returnToMain) {
 			showMenu2();
 			int choice = input.getIntInput("Enter your choice: ");
@@ -283,6 +286,7 @@ public class SurveyHandler {
 		}
 		prompt = prompt + " (Give atleast " + maxOptions + " points)";
 		Essay question = new Essay(prompt);
+		question.setNoOfAnswersAllowed(maxOptions);
 		currentSurvey.addQuestion(question);
 		System.out.println("Your essay question has been added.\n");
 	}

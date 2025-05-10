@@ -21,13 +21,11 @@ public class MultipleChoice extends Question implements Serializable {
 	public void setNoOfAnswersAllowed(int noOfAnswersAllowed) {
 		this.noOfAnswersAllowed = noOfAnswersAllowed;
 		suffix = " (Select up to " + noOfAnswersAllowed + " option" + ((noOfAnswersAllowed > 1) ? "s" : "") + ")";
-		this.updatePrompt();
+		updatePrompt();
 	}
 
 	private void updatePrompt() {
-		if (prompt.contains("(Select up to ")) {
-			return;
-		} else {
+		if (!prompt.contains("(Select up to ")) {
 			prompt = prompt + suffix;
 		}
 	}
@@ -70,5 +68,10 @@ public class MultipleChoice extends Question implements Serializable {
 
 	public void modifyOption(int index, String option) {
 		options.set(index, option);
+	}
+
+	@Override
+	public List<String> getResponse(Input input) {
+		return input.getMultipleChoiceResponse(noOfAnswersAllowed, noOfOptions);
 	}
 }

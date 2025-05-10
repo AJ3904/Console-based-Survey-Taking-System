@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.List;
 
 public abstract class Question implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -20,4 +21,6 @@ public abstract class Question implements Serializable {
 	public void setPrompt(String prompt) {
 		this.prompt = prompt;
 	}
+
+	public abstract List<String> getResponse(Input input);
 }
