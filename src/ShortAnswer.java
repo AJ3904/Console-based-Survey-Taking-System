@@ -17,10 +17,6 @@ public class ShortAnswer extends Essay implements Serializable {
 		this.maxCharacters = maxCharacters;
 	}
 
-	public int getCharacterLimit() {
-		return maxCharacters;
-	}
-
 	@Override
 	public List<String> getResponse(Input input) {
 		List<String> answers = new ArrayList<>();
