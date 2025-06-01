@@ -101,7 +101,7 @@ public class Survey implements Serializable {
 		while (choice <= 0 || choice > questions.size()) {
 			choice = input.getIntInput("Enter a valid question number: ");
 		}
-		questions.get(choice).modifyQuestion(input);
+		questions.get(choice - 1).modifyQuestion(input);
 	}
 
 	public void tabulate() {

@@ -13,7 +13,8 @@ public class Essay extends Question implements Serializable {
 			System.out.println("You must allow at least 1 response. Please try again.");
 			maxOptions = input.getIntInput("Enter the number of responses: ");
 		}
-		prompt = prompt + " (Give atleast " + maxOptions + " points)";
+		String pointLabel = maxOptions == 1 ? "point" : "points";
+		prompt = prompt + " (Give at least " + maxOptions + " " + pointLabel + ")";
 		this.noOfAnswersAllowed = maxOptions;
 		this.prompt = prompt;
 	}
