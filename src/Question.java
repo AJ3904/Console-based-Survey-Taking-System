@@ -12,10 +12,6 @@ public abstract class Question implements Serializable {
 		System.out.println(prompt);
 	}
 
-	public void setNoOfAnswersAllowed(int noOfAnswersAllowed) {
-		this.noOfAnswersAllowed = noOfAnswersAllowed;
-	}
-
 	public String getPrompt() {
 		return prompt;
 	}
@@ -33,4 +29,6 @@ public abstract class Question implements Serializable {
 	}
 
 	public abstract List<String> getResponse(Input input);
+
+	public abstract void tabulate(List<List<String>> allAnswers);
 }

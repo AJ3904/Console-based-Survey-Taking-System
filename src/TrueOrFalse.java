@@ -1,20 +1,16 @@
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TrueOrFalse extends MultipleChoice implements Serializable {
+public class TrueOrFalse extends Question implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
-	TrueOrFalse(String prompt) {
-		super(prompt);
-		options.add("True");
-		options.add("False");
-		this.noOfOptions = 2;
-	}
-
-	@Override
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
+	TrueOrFalse(Input input) {
+		this.prompt = input.getPrompt("Enter the prompt for your True/False question:");
 	}
 
 	@Override
@@ -32,7 +28,22 @@ public class TrueOrFalse extends MultipleChoice implements Serializable {
 	}
 
 	@Override
-	public void modifyQuestion(Input input) {
-		modifyQuestionSuper(input);
+	public void tabulate(List<List<String>> allAnswers) {
+		Map<String, Integer> counts = new LinkedHashMap<>();
+		counts.put("True", 0);
+		counts.put("False", 0);
+
+		for (List<String> answer : allAnswers) {
+			for (String response : answer) {
+				if (response.equals("T")) {
+					counts.put("True", counts.get("True") + 1);
+				} else if (response.equals("F")) {
+					counts.put("False", counts.get("False") + 1);
+				}
+			}
+		}
+
+		System.out.println("True: " + counts.get("True"));
+		System.out.println("False: " + counts.get("False"));
 	}
 }
