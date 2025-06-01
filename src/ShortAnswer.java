@@ -1,16 +1,13 @@
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShortAnswer extends Question implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private int maxCharacters;
 
-	ShortAnswer(Input input) {
+	ShortAnswer(Input input, boolean flag) {
 		this.prompt = input.getPrompt("Enter the prompt for your short-answer question:");
 		int maxChars = input.getIntInput("Enter the maximum response length (in characters): ");
 		while (true) {
@@ -22,6 +19,11 @@ public class ShortAnswer extends Question implements Serializable {
 		}
 		prompt = prompt + " (In under " + maxChars + " characters)";
 		this.maxCharacters = maxChars;
+
+		if (flag) {
+			System.out.println("Enter the correct answer:");
+			answers = Collections.singletonList(input.getShortAnswerResponse(maxCharacters));
+		}
 	}
 
 	public void setMaxCharacters(int maxCharacters) {
@@ -37,8 +39,8 @@ public class ShortAnswer extends Question implements Serializable {
 	}
 
 	@Override
-	public void modifyQuestion(Input input) {
-		super.modifyQuestion(input);
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
 		setPrompt(prompt + " (In under " + maxCharacters + " characters)");
 		String choice = input.getChoice("Do you wish to modify the character limit? [Y/N]", "Y", "N");
 
@@ -51,6 +53,11 @@ public class ShortAnswer extends Question implements Serializable {
 			prompt = prompt + " (In under " + limit + " characters)";
 			setPrompt(prompt);
 			setMaxCharacters(limit);
+		}
+
+		if (flag) {
+			System.out.println("Enter the correct answer:");
+			answers = Collections.singletonList(input.getShortAnswerResponse(maxCharacters));
 		}
 	}
 

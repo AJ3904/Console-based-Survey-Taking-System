@@ -12,7 +12,7 @@ public class MultipleChoice extends Question implements Serializable {
 	protected List<String> options = new ArrayList<>();
 	protected int noOfOptions;
 
-	MultipleChoice(Input input) {
+	MultipleChoice(Input input, boolean flag) {
 		this.prompt = input.getPrompt("Enter the prompt for your multiple-choice question:");
 
 		int maxOptions = input.getIntInput("Enter the number of selectable options: ");
@@ -36,6 +36,12 @@ public class MultipleChoice extends Question implements Serializable {
 			String option = input.getNonEmptyResponse("Enter choice #" + (i + 1) + ": ", "Choice");
 			options.add(option);
 		}
+
+		if (flag) {
+			System.out.println("Enter the correct answer: ");
+			displayOptions(false);
+			answers = input.getMultipleChoiceResponse(maxOptions, noOfOptions);
+		}
 	}
 
 	@Override
@@ -47,7 +53,6 @@ public class MultipleChoice extends Question implements Serializable {
 	public void displayQuestion() {
 		System.out.println(prompt);
 		displayOptions(false);
-		System.out.println();
 	}
 
 	public void displayOptions(boolean numbered) {
@@ -67,6 +72,7 @@ public class MultipleChoice extends Question implements Serializable {
 					System.out.print("\t");
 				}
 			}
+			System.out.println();
 		}
 	}
 
@@ -84,8 +90,8 @@ public class MultipleChoice extends Question implements Serializable {
 	}
 
 	@Override
-	public void modifyQuestion(Input input) {
-		super.modifyQuestion(input);
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
 		while (true) {
 			String choice = input.getChoice("Do you wish to modify choices? [Y/N]", "Y", "N");
 
@@ -100,6 +106,11 @@ public class MultipleChoice extends Question implements Serializable {
 			} else {
 				break;
 			}
+		}
+		if (flag) {
+			System.out.println("Enter the correct answer: ");
+			displayOptions(false);
+			answers = input.getMultipleChoiceResponse(noOfAnswersAllowed, noOfOptions);
 		}
 	}
 
@@ -117,6 +128,18 @@ public class MultipleChoice extends Question implements Serializable {
 			String key = String.valueOf(option);
 			if (counts.containsKey(key)) {
 				System.out.println(key + ": " + counts.get(key));
+			}
+		}
+	}
+
+	@Override
+	public void displayAnswer() {
+		System.out.println("Correct answer(s):");
+		for (String answer : answers) {
+			answer = answer.trim().toUpperCase();
+			if (answer.length() == 1 && answer.charAt(0) >= 'A' && answer.charAt(0) <= 'Z') {
+				int index = answer.charAt(0) - 'A';
+				System.out.println(answer + ") " + options.get(index));
 			}
 		}
 	}

@@ -9,8 +9,21 @@ public class TrueOrFalse extends Question implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	TrueOrFalse(Input input) {
+	TrueOrFalse(Input input, boolean flag) {
 		this.prompt = input.getPrompt("Enter the prompt for your True/False question:");
+		if (flag) {
+			this.answers = new ArrayList<>();
+			answers.add(input.getChoice("Enter the correct answer [T/F]:", "T", "F"));
+		}
+	}
+
+	@Override
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
+		if (flag) {
+			this.answers = new ArrayList<>();
+			answers.add(input.getChoice("Enter the correct answer [T/F]:", "T", "F"));
+		}
 	}
 
 	@Override
@@ -35,9 +48,9 @@ public class TrueOrFalse extends Question implements Serializable {
 
 		for (List<String> answer : allAnswers) {
 			for (String response : answer) {
-				if (response.equals("T")) {
+				if (response.equalsIgnoreCase("T")) {
 					counts.put("True", counts.get("True") + 1);
-				} else if (response.equals("F")) {
+				} else if (response.equalsIgnoreCase("F")) {
 					counts.put("False", counts.get("False") + 1);
 				}
 			}

@@ -12,7 +12,7 @@ public class Matching extends Question implements Serializable {
 	private final List<String> rightItems = new ArrayList<>();
 	private int maxKeyLength = 0;
 
-	Matching(Input input) {
+	Matching(Input input, boolean flag) {
 		this.prompt = input.getPrompt("Enter the prompt for your matching question:");
 
 		int numberOfMatches = input.getIntInput("Enter the number of matches: ");
@@ -25,6 +25,12 @@ public class Matching extends Question implements Serializable {
 			String leftItem = input.getNonEmptyResponse("Enter item #" + i + " for the left-hand side: ", "Item");
 			String rightItem = input.getNonEmptyResponse("Enter item #" + i + " for the right-hand side: ", "Item");
 			this.setMatch(leftItem, rightItem);
+		}
+
+		if (flag) {
+			displayQuestion();
+			System.out.println("Enter the correct answer:");
+			answers = input.getMatchingResponse(numberOfMatches);
 		}
 	}
 
@@ -75,8 +81,8 @@ public class Matching extends Question implements Serializable {
 	}
 
 	@Override
-	public void modifyQuestion(Input input) {
-		super.modifyQuestion(input);
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
 		while (true) {
 			String choice = input.getChoice("Do you wish to modify the matching pairs? [Y/N]", "Y", "N");
 
@@ -100,6 +106,12 @@ public class Matching extends Question implements Serializable {
 			} else {
 				break;
 			}
+		}
+
+		if (flag) {
+			displayQuestion();
+			System.out.println("Enter the correct answer:");
+			answers = input.getMatchingResponse(leftItems.size());
 		}
 	}
 

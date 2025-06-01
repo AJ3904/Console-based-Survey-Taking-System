@@ -6,7 +6,7 @@ public class Essay extends Question implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	Essay(Input input) {
+	Essay(Input input, boolean flag) {
 		String prompt = input.getPrompt("Enter the prompt for your essay question:");
 		int maxOptions = input.getIntInput("Enter the number of responses: ");
 		while (maxOptions < 1) {
@@ -17,6 +17,20 @@ public class Essay extends Question implements Serializable {
 		prompt = prompt + " (Give at least " + maxOptions + " " + pointLabel + ")";
 		this.noOfAnswersAllowed = maxOptions;
 		this.prompt = prompt;
+
+		if (flag) {
+			System.out.println("Enter the correct answer(s):");
+			answers = input.getEssayResponse(noOfAnswersAllowed);
+		}
+	}
+
+	@Override
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
+		if (flag) {
+			System.out.println("Enter the correct answer(s):");
+			answers = input.getEssayResponse(noOfAnswersAllowed);
+		}
 	}
 
 	@Override

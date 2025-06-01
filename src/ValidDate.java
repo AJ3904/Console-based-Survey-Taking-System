@@ -1,16 +1,27 @@
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ValidDate extends Question implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public ValidDate(Input input) {
+	public ValidDate(Input input, boolean flag) {
 		this.prompt = input.getPrompt("Enter the prompt for your date question:");
+
+		if (flag) {
+			System.out.println("Enter the correct answer (in YYYY-MM-DD):");
+			answers = Collections.singletonList(input.getDateResponse());
+		}
+	}
+
+	@Override
+	public void modifyQuestion(Input input, boolean flag) {
+		super.modifyQuestion(input, flag);
+		if (flag) {
+			System.out.println("Enter the correct answer (in YYYY-MM-DD):");
+			answers = Collections.singletonList(input.getDateResponse());
+		}
 	}
 
 	@Override
